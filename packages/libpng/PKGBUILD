@@ -1,0 +1,43 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 81055 2010-05-26 10:07:00Z jgc $
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Travis Willard <travis@archlinux.org>
+# Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
+
+pkgname=libpng
+pkgver=1.4.2
+pkgrel=1
+pkgdesc="A collection of routines used to create PNG format graphics files"
+arch=('macx86')
+url="http://www.libpng.org/pub/png/libpng.html"
+license=('custom')
+depends=('zlib')
+options=('!libtool')
+source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz
+        http://downloads.sourceforge.net/sourceforge/libpng-apng/libpng-${pkgver}-apng.patch.gz)
+md5sums=('89fd334dc5fc84ff146b9269c4fa452f'
+         '378ade7c68c25d00e099b28911d06561')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # Add animated PNG (apng) support
+  # see http://sourceforge.net/projects/libpng-apng/
+  patch -p1 -i "${srcdir}/libpng-${pkgver}-apng.patch" || return 1
+
+  libtoolize --force --copy || return 1
+  aclocal || return 1
+  autoconf || return 1
+  automake --add-missing || return 1
+
+  ./configure --prefix=/opt/arch || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+
+  cd contrib/pngminus
+  make PNGLIB="-L${pkgdir}/opt/arch/lib -lpng" -f makefile.std png2pnm pnm2png
+  install -m755 png2pnm pnm2png "${pkgdir}/opt/arch/bin/"
+  mkdir -p ${pkgdir}/opt/arch/share/licenses/${pkgname}
+  install -m644 ../../LICENSE "${pkgdir}/opt/arch/share/licenses/${pkgname}/LICENSE" || return 1
+}

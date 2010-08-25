@@ -1,0 +1,23 @@
+# $Id$
+# Maintainer: Dan McGee <dan@archlinux.org>
+
+pkgname=pacman-mirrorlist
+pkgver=20100825
+pkgrel=1
+pkgdesc="Arch Linux mirror list for use by pacman"
+arch=('macx86' 'i686' 'x86_64')
+url="http://www.archlinux.org/pacman/"
+license=('GPL')
+groups=('base')
+backup=(etc/pacman.d/mirrorlist)
+source=(mirrorlist)
+
+build() {
+  mkdir -p $pkgdir/opt/arch/etc/pacman.d
+  install -m644 $srcdir/mirrorlist $pkgdir/opt/arch/etc/pacman.d/
+  # customize mirrorlist to architecture
+  #sed -i~ -e "s/@carch@/${CARCH}/g" $pkgdir/etc/pacman.d/mirrorlist
+  # rm $pkdir/etc/pacman.d/mirrorlist~
+}
+
+md5sums=('512b28f9b1c6433466e781bc930d774a')

@@ -1,0 +1,21 @@
+post_install() {
+	opt/arch/sbin/update-ca-certificates --fresh
+}
+
+post_upgrade() {
+	opt/arch/sbin/update-ca-certificates --fresh
+}
+
+pre_remove() {
+	# clean up certificates
+	local _backup=$(mktemp)
+	mv opt/arch/etc/ca-certificates.conf ${_backup}
+	echo > opt/arch/etc/ca-certificates.conf
+	opt/arch/sbin/update-ca-certificates --fresh
+	mv ${_backup} opt/arch/etc/ca-certificates.conf
+}
+
+post_remove() {
+	# remove the cert file if it is empty
+	[[ -s opt/arch/etc/ssl/certs/ca-certificates.crt ]] || rm -f opt/arch/etc/ssl/certs/ca-certificates.crt
+}

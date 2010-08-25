@@ -1,0 +1,41 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 86661 2010-08-02 22:11:04Z giovanni $
+# Maintainer: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
+
+pkgname=mercurial
+pkgver=1.6.2
+pkgrel=1
+pkgdesc="A scalable distributed SCM tool"
+arch=('macx86')
+url="http://www.selenic.com/mercurial"
+license=('GPL')
+depends=('python')
+optdepends=('tk: for the hgk GUI')
+source=(http://www.selenic.com/mercurial/release/${pkgname}-${pkgver}.tar.gz
+        mercurial.profile)
+md5sums=('847359d7488caf8074a69d4b87ca64d2'
+         '75218cb776b31d40b6fd8c9d66f35181')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}/" --optimize=1 || return 1
+
+  install -d ${pkgdir}/opt/arch/share/man/{man1,man5}
+  install -m644 doc/hg.1 "${pkgdir}/opt/arch/share/man/man1" || return 1
+  install -m644 doc/{hgrc.5,hgignore.5} "${pkgdir}/opt/arch/share/man/man5" || return 1
+
+  mkdir -p "${pkgdir}/opt/arch/bin"
+  install -m755 contrib/hgk "${pkgdir}/opt/arch/bin/" || return 1
+  install -m644 -D contrib/zsh_completion "${pkgdir}/opt/arch/share/zsh/site-functions/_hg" || return 1
+  install -m644 -D contrib/bash_completion "${pkgdir}/opt/arch/etc/bash_completion.d/hg" || return 1
+  install -d "${pkgdir}/opt/arch/share/emacs/site-lisp"
+  install -m644 contrib/{mq.el,mercurial.el} "${pkgdir}/opt/arch/share/emacs/site-lisp" || return 1
+
+#  vimpath="${pkgdir}/opt/arch/share/vim/vimfiles"
+#  install -Dm644 contrib/vim/HGAnnotate.vim "${vimpath}/syntax/HGAnnotate.vim" || return 1
+
+  # set some variables
+  install -m755 -d ${pkgdir}/opt/arch/etc/profile.d
+  install -m755 ${srcdir}/mercurial.profile "${pkgdir}/opt/arch/etc/profile.d/mercurial.sh" || return 1
+}

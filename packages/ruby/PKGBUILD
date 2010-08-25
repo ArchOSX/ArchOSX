@@ -1,0 +1,49 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# ArchLinux Contributors: Allan McRae <allan@archlinux.org>
+#		dorphell <dorphell@archlinux.org>
+# 		John Proctor <jproctor@prium.net>
+#               Jeramy Rutley <jrutley@gmail.com>
+pkgname=ruby
+pkgver=1.9.1_p378
+_pkgver=1.9.1-p378
+pkgrel=1
+pkgdesc="An object-oriented language for quick and easy programming"
+arch=('macx86')
+license=('custom')
+url="http://www.ruby-lang.org/en/"
+depends=()
+optdepends=('ncurses: Curses module'
+            'readline'
+            'libiconv: International text'
+            'tk: Tk Gui'
+            'openssl: SSL/crypto/sha'
+            'zlib: Compression'
+            'gdbm: Database'
+            'db: Database')
+makedepends=('ncurses' 'readline' 'libiconv' 'tk' 'openssl' 'zlib' 'gdbm' 'db')
+echo ${makedepends};
+source=("ftp://ftp.ruby-lang.org/pub/ruby/1.9/${pkgname}-${_pkgver}.tar.bz2"
+        'openssl-1.0.patch')
+
+options=('!emptydirs' 'force')
+md5sums=('5922459622a23612eb9b68a3586cb5f8'
+         'e22ebf0dbe836f5344682bc5da83dcb5')
+
+
+
+
+build() {
+  cd ${startdir}/src/${pkgname}-${_pkgver}
+
+  # see http://cvs.fedoraproject.org/viewvc/rpms/ruby/devel/
+  patch -p1 -i ${startdir}/openssl-1.0.patch || return 1
+
+  ./configure --prefix=/opt/arch --enable-shared --enable-pthread
+  sed -e 's!-ltermcap !!g' -i~ ext/curses/Makefile
+  make || return 1
+  make DESTDIR=${startdir}/pkg install
+  #generate the ri docs
+  make -j1 DESTDIR=${startdir}/pkg install-doc
+  mkdir -p ${startdir}/pkg/opt/arch/share/licenses/${pkgname}
+  install -m644 COPYING ${startdir}/pkg/opt/arch/share/licenses/${pkgname}/COPYING
+}

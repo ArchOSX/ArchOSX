@@ -1,0 +1,27 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 79844 2010-05-08 11:48:57Z jgc $
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+# Contributor: judd <jvinet@zeroflux.org>
+
+pkgname=libtasn1
+pkgver=2.6
+pkgrel=1
+pkgdesc="The ASN.1 library used in GNUTLS"
+arch=('macx86')
+license=('GPL3' 'LGPL')
+url="http://www.gnu.org/software/libtasn1/"
+depends=('texinfo')
+options=('!libtool')
+install=libtasn1.install
+source=(ftp://ftp.gnu.org/gnu/libtasn1/${pkgname}-${pkgver}.tar.gz)
+md5sums=('d410671e13038324336917ceed7470a5')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/opt/arch \
+      --with-packager=Archlinux \
+      --with-packager-bug-reports="http://bugs.archlinux.org/" \
+      --with-packager-version=${pkgver}-${pkgrel} || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+}

@@ -1,0 +1,80 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 75257 2010-04-01 05:30:58Z allan $
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributer: Jason Chu <jason@archlinux.org>
+
+pkgname=python
+pkgver=2.6.5
+pkgrel=3
+_pybasever=2.6
+pkgdesc="A high-level scripting language"
+arch=('macx86')
+license=('PSF')
+url="http://www.python.org"
+depends=('db>=4.8' 'bzip2' 'gdbm' 'openssl' 'zlib' 'expat' 'sqlite3')
+makedepends=('tk>=8.5.0')
+optdepends=('tk: for IDLE, pynche and modulator')
+provides=('python2' 'python-elementtree' 'python-ctypes')
+replaces=('python-elementtree' 'python-ctypes')
+source=(http://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.bz2
+	python-2.6-internal-expat.patch
+	python-2.6-db-4.8.patch
+	modulator-launcher
+	pynche-launcher)
+md5sums=('6bef0417e71a1a1737ccf5750420fdb3'
+         'a74f266ae9a01c4af08fcd7d11f235bb'
+         '10eb5449ead95b9cb13eae9f9a65894e'
+         '39f418937ccbda6cd81e10cc705327b8'
+         'abbbb14e8644e7e3f7ff6f5f47e1ddf2')
+
+build() {
+  cd ${srcdir}/Python-${pkgver}
+
+  patch -Np0 -i ${srcdir}/python-2.6-internal-expat.patch
+
+  #http://bugs.python.org/issue6949
+  patch -Np0 -i ${srcdir}/python-2.6-db-4.8.patch
+
+  export OPT="${CFLAGS}"
+  ./configure --prefix=/opt/arch --with-threads --enable-shared --enable-unicode
+
+  sed -i~ -e 's#SITEPATH=#SITEPATH=:/opt/arch/lib/python2.5/site-packages#' Makefile
+
+  # enable binascii and zlib
+  sed -i 's/#binascii binascii.c/binascii binascii.c/' Modules/Setup
+  sed -i 's/#zlib zlibmodule.c/zlib zlibmodule.c/' Modules/Setup
+
+
+  make || return 1
+  make DESTDIR=${pkgdir} install
+
+  rm ${pkgdir}/opt/arch/bin/python
+  ln -sf python${_pybasever} ${pkgdir}/opt/arch/bin/python
+  ln -sf python${_pybasever} ${pkgdir}/opt/arch/bin/python2
+
+  ln -sf ../../libpython${_pybasever}.so \
+    ${pkgdir}/opt/arch/lib/python${_pybasever}/config/libpython${_pybasever}.so
+
+  # Install the tools
+  #modulator
+  sed -i "s#%%PYBASEVER%%#${_pybasever}#" ${srcdir}/modulator-launcher
+  install -m755 ${srcdir}/modulator-launcher ${pkgdir}/opt/arch/bin/modulator
+  cp -r Tools/modulator ${pkgdir}/opt/arch/lib/python${_pybasever}/site-packages/
+
+  #pynche
+  sed -i "s#%%PYBASEVER%%#${_pybasever}#" ${srcdir}/pynche-launcher
+  install -m755 ${srcdir}/pynche-launcher ${pkgdir}/opt/arch/bin/pynche
+  rm -f Tools/pynche/*.pyw
+  cp -r Tools/pynche ${pkgdir}/opt/arch/lib/python${_pybasever}/site-packages/
+
+  #gettext
+  install -m755 Tools/i18n/pygettext.py ${pkgdir}/opt/arch/bin/
+  install -m755 Tools/i18n/msgfmt.py ${pkgdir}/opt/arch/bin/
+
+  mkdir -p ${pkgdir}/opt/arch/lib/python${_pybasever}/Tools/scripts
+  install -m644 Tools/scripts/README ${pkgdir}/opt/arch/lib/python${_pybasever}/Tools/scripts/
+  install -m755 Tools/scripts/*py ${pkgdir}/opt/arch/lib/python${_pybasever}/Tools/scripts/
+
+  # license
+  install -Dm644 LICENSE ${pkgdir}/opt/arch/share/licenses/${pkgname}/LICENSE
+}

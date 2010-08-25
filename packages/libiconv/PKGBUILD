@@ -1,0 +1,21 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# Contributor & Maintainer: mutlu_inek <mutlu_inek@yahoo.de>
+
+pkgname=libiconv
+pkgver=1.13.1
+pkgrel=1
+pkgdesc="GNU libiconv is an encoding conversion library"
+arch=('macx86')
+url="http://www.gnu.org/software/libiconv/"
+depends=()
+options=()
+source=(http://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+license=('GPL')
+md5sums=('7ab33ebd26687c744a37264a330bbe9a')
+
+build() {
+  cd ${startdir}/src/${pkgname}-${pkgver}
+  ./configure --prefix=/opt/arch
+  make || return 1
+  make DESTDIR=${startdir}/pkg install || return 1
+}
