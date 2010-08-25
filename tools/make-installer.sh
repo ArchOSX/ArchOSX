@@ -2,7 +2,8 @@
 
 PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
 INSTALL_ROOT=~/archroot
-PACMAN_CACHE=~/arch-osx.cache/pkg
+#PACMAN_CACHE=~/arch-osx.cache/pkg
+PACMAN_CACHE=/opt/arch/var/cache/pacman/pkg/
 VERSION=`date +%Y%m%d`
 
 DEPS=(
@@ -33,8 +34,9 @@ setup_root() {
     mkdir -p "$root_path"/opt/arch/var/lib/pacman/local || exit 1
     cp /usr/lib/{dyld,libSystem.B.dylib,libgcc_s.1.dylib} "$root_path"/usr/lib/ || exit 1
     cp /usr/lib/system/libmathCommon.A.dylib "$root_path"/usr/lib/system/ || exit 1
-    cp /opt/arch/bin/bash.minimal "$root_path"/bin/sh || exit 1
-    
+#    cp /opt/arch/bin/bash.minimal "$root_path"/bin/sh || exit 1
+    cp /opt/arch/bin/bash "$root_path"/bin/sh || exit 1
+   
     echo "/opt/arch/bin" > "$root_path/private/etc/paths.d/arch-osx"
 }
 
