@@ -24,6 +24,7 @@ provides=(
       'nasm=0.98.40'
       'glibc'
       'gcc-libs'
+      'sh'
 )
 source=()
 noextract=()
