@@ -1,38 +1,51 @@
-# ArchOSX Maintainer: Kevin Barry <barryk gmail com>
-# ArchLinux Maintainer: Aaron Griffin <aaron@archlinux.org>
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id$
+# Maintainer: Aaron Griffin <aaron@archlinux.org>
 # Contributor: Xavier Chantry <shiningxc@gmail.com>
 
 pkgname=libfetch
-pkgver=2.20
-pkgrel=4
+pkgver=2.33
+pkgrel=1
 pkgdesc="URL based download library"
 arch=('macx86')
 license=('BSD')
-groups=('base')
-depends=('openssl')
-url="http://cvsweb.netbsd.org/bsdweb.cgi/pkgsrc/net/fetch/"
-source=(Makefile http://ftp.archlinux.org/other/$pkgname/$pkgname-$pkgver.tar.gz)
-    
-md5sums=('d02bd0533f471ad9f4b237f0241b43d8'
-         '085d4f5c9b83a3b5416e2c54e3c8f9cb')
-         
+depends=('openssl>=1.0.0')
+url="http://cvsweb.netbsd.org/bsdweb.cgi/pkgsrc/net/libfetch/"
+source=(Makefile
+        ftp://ftp.archlinux.org/other/$pkgname/$pkgname-$pkgver.tar.gz)
+#source=(ftp://ftp.archlinux.org/other/$pkgname/$pkgname-$pkgver.tar.gz)
+
+md5sums=('f2f9c47c35e846970377c18a907ee203'
+         'a176b94f7f30344ef8a71c047ca2136b')
+#md5sums=('a176b94f7f30344ef8a71c047ca2136b')
+
+
+# keep an upgrade path for older installations
+PKGEXT='.pkg.tar.gz'
+
 # source PKGBUILD && mksource
 mksource() {
-    export CVSROOT=:pserver:anoncvs@anoncvs.NetBSD.org:/cvsroot
-    D=pkgsrc/net/libfetch
-    [ -d "$D" ] && cvs up "$D" || cvs co "$D"
-    pushd "$D"
-    dirname=$(cvs log 2>/dev/null | /bin/grep "^libfetch-.*:$" | head -n1 | sed 's/://')
-    cp -r files $dirname
-    tar -cv --exclude=CVS -f ../../../$dirname.tar.gz $dirname
-    rm -r $dirname
-    popd
+  export CVSROOT=:pserver:anoncvs@anoncvs.NetBSD.org:/cvsroot
+  D=pkgsrc/net/libfetch
+  [ -d "$D" ] && cvs up "$D" || cvs co "$D"
+  pushd "$D"
+  dirname=$(sed -n 's/DISTNAME=.*\(libfetch-.*$\)/\1/p' Makefile)
+  cp -r files $dirname
+  tar -czv --exclude=CVS -f ../../../$dirname.tar.gz $dirname
+  rm -r $dirname
+  popd
 }
 
 build() {
-  cd $srcdir/${pkgname}-${pkgver}
-  cp ../Makefile .
+  cd $srcdir/$pkgname-$pkgver
+  cp $srcdir/Makefile .
   make || return 1
-  make DESTDIR=$pkgdir install
 }
 
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+  licdir=$pkgdir/opt/arch/share/licenses/libfetch/
+  mkdir -p $licdir
+  sed -n -e '/Copyright (c)/,/SUCH DAMAGE\./p' common.c | cut -c '4-' > $licdir/LICENSE
+}
