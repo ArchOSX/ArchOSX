@@ -1,0 +1,27 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 70182 2010-02-25 10:44:28Z allan $
+# Maintainer: Allan McRae <allan@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
+pkgname=m4
+pkgver=1.4.14
+pkgrel=1
+pkgdesc="m4 macro processor"
+arch=('macx86')
+license=('GPL3')
+url="http://www.gnu.org/software/m4"
+install=m4.install
+groups=('base-devel')
+#depends=('glibc' 'bash')
+depends=()
+source=(ftp://ftp.gnu.org/gnu/m4/$pkgname-$pkgver.tar.bz2)
+md5sums=('e6fb7d08d50d87e796069cff12a52a93')
+#md5sums=('4a2aa72ed0b3fafa1071bb2485d993ee')
+
+build() {
+  mkdir -p ${srcdir}/$pkgname-$pkgver
+  cd ${srcdir}/$pkgname-$pkgver
+  ./configure --prefix=/opt/arch
+  make || return 1
+  make prefix=${pkgdir}/opt/arch install || return 1
+}
