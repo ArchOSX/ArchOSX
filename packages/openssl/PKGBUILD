@@ -64,7 +64,8 @@ package() {
 	install -D -m644 LICENSE $pkgdir/opt/arch/share/licenses/$pkgname/LICENSE
 
 	#hack
-        ln -s $pkgdir/opt/arch/lib/libcrypto.1.0.0.dylib $pkgdir/opt/arch/lib/libcrypto.0.9.8.dylib
-        ln -s $pkgdir/opt/arch/lib/libssl.1.0.0.dylib $pkgdir/opt/arch/lib/libssl.0.9.8.dylib
+	cd $pkgdir/opt/arch/lib
+        ln -s libcrypto.1.0.0.dylib libcrypto.0.9.8.dylib
+        ln -s libssl.1.0.0.dylib libssl.0.9.8.dylib
 
 }
