@@ -1,11 +1,10 @@
-# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
 # $Id$
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 # Contributor: Jochem Kossen <j.kossen@home.nl>
 
 pkgname=fakeroot
-pkgver=1.12.4
-pkgrel=2
+pkgver=1.12.1
+pkgrel=3
 pkgdesc="Gives a fake root environment, useful for building packages as a non-privileged user"
 arch=('macx86')
 license=('GPL')
@@ -15,7 +14,7 @@ depends=()
 options=('!libtool')
 source=(http://ftp.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.tar.gz
         fakeroot_mac.diff)
-md5sums=('aaefede2405a40c87438e7e833d69b70'
+md5sums=('87970d6784f536cde84f9bcbaaa52720'
          '6f9c9bdb51d97bdfd26cfe118be6fd9a')
 
 build() {
