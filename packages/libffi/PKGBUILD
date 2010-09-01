@@ -1,0 +1,25 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 72255 2010-03-13 20:43:14Z jgc $
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgname=libffi
+pkgver=3.0.9
+pkgrel=1
+pkgdesc="A portable, high level programming interface to various calling conventions."
+arch=('macx86')
+license=('MIT')
+url="http://sourceware.org/libffi"
+depends=('texinfo')
+options=('!libtool' 'force')
+install=libffi.install
+source=(ftp://sourceware.org/pub/libffi/libffi-${pkgver}.tar.gz)
+md5sums=('1f300a7a7f975d4046f51c3022fa5ff1')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/opt/arch || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+  install -m755 -d "${pkgdir}/opt/arch/share/licenses/${pkgname}"
+  install -m644 LICENSE "${pkgdir}/opt/arch/share/licenses/${pkgname}/" || return 1
+}
