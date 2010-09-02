@@ -1,0 +1,37 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 77386 2010-04-12 10:52:36Z andrea $
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Paul Mattal <paul@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+
+pkgname=ncftp
+pkgver=3.2.4
+pkgrel=1
+pkgdesc="A set of free application programs implementing FTP"
+url="http://www.ncftp.com/"
+arch=('macx86')
+license=('custom')
+depends=('ncurses')
+source=(ftp://ftp.ncftp.com/ncftp/$pkgname-$pkgver-src.tar.bz2)
+md5sums=('bc4af9801f626d541f0bf6b7ac4dae1f')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  install -d ${pkgdir}/opt/arch/share
+  ./configure --prefix=/opt/arch \
+    --sysconfdir=/opt/arch/etc || return 1
+  make || return 1
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make prefix=${pkgdir}/opt/arch mandir=${pkgdir}/opt/arch/share/man install || return 1
+
+  mkdir -p $pkgdir/opt/arch/share/licenses/${pkgname}
+  
+  # Install license
+  install -m644 doc/LICENSE.txt \
+    ${pkgdir}/opt/arch/share/licenses/${pkgname}/LICENSE || return 1
+}
+
