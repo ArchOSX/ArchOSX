@@ -1,0 +1,29 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 16357 2010-04-29 09:58:43Z spupykin $
+# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: William Rea <sillywilly@gmail.com>
+
+pkgname=medit
+pkgver=0.10.4
+pkgrel=1
+pkgdesc="A GTK text editor"
+arch=('macx86')
+url="http://mooedit.sourceforge.net"
+options=('!emptydirs')
+license=('GPL')
+depends=('pygtk' 'libxml2' 'pcre' 'libsm' 'python' 'gtk2')
+makedepends=(pkgconfig perlxml intltool)
+install=medit.install
+source=(http://downloads.sourceforge.net/mooedit/medit-$pkgver.tar.bz2)
+md5sums=('5cfaab52303c0c8a7911ee3c39197136')
+
+build() {
+  cd $startdir/src/medit-$pkgver
+
+  cmake . -DCMAKE_INSTALL_PREFIX=/opt/arch -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=$startdir/pkg install || return 1
+
+  rm -rf $startdir/pkg/opt/arch/share/mime && \
+  rm -rf $startdir/pkg/opt/arch/share/icons/hicolor/icon-theme.cache
+}
