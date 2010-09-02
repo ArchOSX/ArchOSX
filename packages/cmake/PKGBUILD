@@ -7,12 +7,12 @@
 
 pkgname=cmake
 pkgver=2.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A cross-platform open-source make system"
 arch=('macx86')
 license=('custom')
 url="http://www.cmake.org"
-depends=('expat' 'shared-mime-info')
+depends=('expat' 'curl' 'gcc-libs' 'shared-mime-info')
 #makedepends=('qt')
 optdepends=('qt: cmake-gui')
 install=${pkgname}.install
@@ -25,7 +25,6 @@ build() {
 		--mandir=/share/man \
 		--docdir=/share/doc/cmake \
 		--system-libs \
-#		--qt-gui \
 		--parallel=2
 	make
 }
