@@ -35,16 +35,18 @@ build() {
   #http://bugs.python.org/issue6949
   patch -Np0 -i ${srcdir}/python-2.6-db-4.8.patch
 
+
+  # some hacks?
   sed -i 's/#binascii binascii.c/binascii binascii.c/' Modules/Setup.dist
+  sed -i 's/#zlib zlibmodule.c/zlib zlibmodule.c/' Modules/Setup.dist
 
   export OPT="${CFLAGS}"
   ./configure --prefix=/opt/arch --with-threads --enable-shared --enable-unicode
 
   sed -i~ -e 's#SITEPATH=#SITEPATH=:/opt/arch/lib/python2.5/site-packages#' Makefile
 
-  # enable binascii and zlib
+  # enable binascii and zlib (is this necessary because of the above hacks?)
   sed -i 's/#binascii binascii.c/binascii binascii.c/' Modules/Setup
-#  sed -i 's/#binascii binascii.c/binascii binascii.c/' Modules/Setup.dist
   sed -i 's/#zlib zlibmodule.c/zlib zlibmodule.c/' Modules/Setup
 
 
