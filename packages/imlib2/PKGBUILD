@@ -1,34 +1,32 @@
-# ArchOSX Maintainer: Kevin Barry <barryk gmail com>
-# ArchLinux Maintainer: Ronald van Haren <ronald.archlinux.org>
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 79752 2010-05-06 13:39:04Z ronald $
+# Maintainer: Ronald van Haren <ronald.archlinux.org>
 # Contributor: Arjan Timmerman <arjan.archlinux.org>
 # Contributor: Tom Newsom <Jeepster.gmx.co.uk>
 
 pkgname=imlib2
-pkgver=1.4.2
-pkgrel=2
+pkgver=1.4.4
+pkgrel=1
 pkgdesc="Library that does image file loading and saving as well as rendering, manipulation, arbitrary polygon support"
 url="http://sourceforge.net/projects/enlightenment/"
 arch=('macx86')
 license=('BSD')
-depends=('libtiff' 'giflib' 'bzip2' 'freetype2' 'libpng' 'libid3tag' 'libjpeg')
+depends=('libtiff>=3.9.2-2' 'giflib' 'bzip2' 'freetype2' 'libxext' 'libpng>=1.4.0' 'libid3tag' 'libjpeg>=8')
 options=('!libtool')
-source=("http://downloads.sourceforge.net/enlightenment/$pkgname-$pkgver.tar.bz2" \
-        'bufferoverflow.patch')
-md5sums=('9f15568e76ebda9092c571e0df261f54' '76def1fe0ac2ac1686ff24d29979606f')
+source=("http://downloads.sourceforge.net/enlightenment/$pkgname-$pkgver.tar.bz2")
+sha1sums=('aca2cf5d40ddcd8a3acfde605f319fccce7c2a2b')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
   # disable optimizations, they cause problems (e.g. FS#12268)
-  [ $CARCH = "i686" ] && EXTRAOPTS="--disable-mmx"
-  [ $CARCH = "x86_64" ] && EXTRAOPTS="--disable-amd64"
+  #[ $CARCH = "i686" ] && EXTRAOPTS="--disable-mmx"
+  #[ $CARCH = "x86_64" ] && EXTRAOPTS="--disable-amd64"
 
-
-  # Security Fix (Buffer Overflow), upstream fix
-  patch -Np0 -i $srcdir/bufferoverflow.patch || return 1
+  EXTRAOPTS="--disable-amd64"
 
   # Configure and Build
-  LDFLAGS="${LDFLAGS} -L/usr/X11/lib" ./configure --prefix=/opt/arch \
+  ./configure --prefix=/opt/arch \
               --sysconfdir=/opt/arch/etc/imlib2 \
               --x-libraries=/opt/arch/lib $EXTRAOPTS || return 1
   make || return 1
