@@ -1,0 +1,28 @@
+# Arch-OS X Maintainer: Sean Yeh <snoblo at archlinux dot us>
+# $Id: PKGBUILD 20687 2010-07-10 21:43:41Z cbrannon $
+# Maintainer: Jeff Mickey <j@codemac.net>
+# Contributor: Mr Green
+# Contributor: Jens Persson <xerxes2@gmail.com> 
+
+pkgname=pypanel
+pkgver=2.4
+pkgrel=5
+pkgdesc="A lightweight panel/taskbar for X11 window managers written in python"
+arch=('macx86')
+url="http://pypanel.sourceforge.net/"
+license=('GPL')
+depends=('python>=2.6' 'python-xlib' 'imlib2' 'libxft')
+makedepends=('python')
+source=(http://downloads.sourceforge.net/sourceforge/pypanel/PyPanel-$pkgver.tar.gz)
+md5sums=('f1f9a2ed80be72ab36e748833618daba')
+
+build() {
+  cd "$srcdir/PyPanel-$pkgver"
+
+  # hacks
+  sed -i "s|\"/usr/bin/freetype-config\", \"/usr/bin/imlib2-config\"|\"/opt/arch/bin/freetype-config\", \"/opt/arch/bin/imlib2-config\"|" setup.py
+  sed -i "s|\"/usr/lib/libImlib2.so.1\"|\"/opt/arch/lib/libImlib2.1.dylib\"|" setup.py
+
+
+  python setup.py install --root="$pkgdir"
+} 
