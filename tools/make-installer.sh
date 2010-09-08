@@ -7,16 +7,19 @@ PACMAN_CACHE=/opt/arch/var/cache/pacman/pkg/
 VERSION=`date +%Y%m%d`
 
 DEPS=(
+    macosx_xcode
     bzip2
     zlib
     xz
     expat
-    gmp
     libiconv
-    openssl
+    gdbm
+    db
+    gettext
+    #perl
+    #openssl
     libarchive
     libfetch
-    gettext
     pacman-mirrorlist
 )
 
