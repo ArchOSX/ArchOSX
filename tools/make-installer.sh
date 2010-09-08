@@ -9,7 +9,7 @@ VERSION=`date +%Y%m%d`
 DEPS=(
     bzip2
     zlib
-    xz-utils
+    xz
     expat
     gmp
     libiconv
