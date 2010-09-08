@@ -17,7 +17,7 @@ DEPS=(
     db
     gettext
     #perl
-    #openssl
+    openssl
     libarchive
     libfetch
     pacman-mirrorlist
