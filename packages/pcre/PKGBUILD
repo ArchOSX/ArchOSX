@@ -31,6 +31,6 @@ build() {
   #ln -sf ../../lib/libpcre.so.0 "${pkgdir}/usr/lib/libpcre.so" || return 1
 
 
-  mkdir -p ${pkgdir}/usr/share/licenses/${pkgname}
-  install -m644 LICENCE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" || return 1
+  mkdir -p ${pkgdir}/opt/arch/share/licenses/${pkgname}
+  install -m644 LICENCE "${pkgdir}/opt/arch/share/licenses/${pkgname}/LICENSE" || return 1
 }
