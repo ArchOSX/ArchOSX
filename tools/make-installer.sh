@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/opt/arch/bin/bash
 
 PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
 INSTALL_ROOT=~/archroot
@@ -8,6 +8,9 @@ VERSION=`date +%Y%m%d`
 
 DEPS=(
     macosx_xcode
+    ncurses
+    readline
+    bash
     bzip2
     zlib
     xz
@@ -16,11 +19,11 @@ DEPS=(
     gdbm
     db
     gettext
-    #perl
     openssl
     libarchive
     libfetch
     pacman-mirrorlist
+
 )
 
 NONDEPS=(
@@ -63,7 +66,7 @@ install_package() {
     flag=$2
     file=`find ${PACMAN_CACHE} -name "${name}-[0-9]*" | sort -r | head -n 1`
     echo Installing package: ${name} File: ${file}
-    pacman -U ${flag} --noprogressbar -r ${INSTALL_ROOT} -b ${INSTALL_ROOT}/opt/arch/var/lib/pacman ${file} || exit 1
+    pacman -Uf ${flag} --noprogressbar -r ${INSTALL_ROOT} -b ${INSTALL_ROOT}/opt/arch/var/lib/pacman ${file} || exit 1
 }
 
 if [ "$(id -u)" != "0" ]; then
