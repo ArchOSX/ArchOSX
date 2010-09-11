@@ -4,7 +4,7 @@
 
 pkgname=glib2
 pkgver=2.24.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Common C routines used by GTK+ 2.4 and other libs"
 url="http://www.gtk.org/"
 arch=('macx86')
@@ -31,4 +31,7 @@ build() {
   install -m755 "${srcdir}/glib2.csh" "${pkgdir}/opt/arch/etc/profile.d/" || return 1
 
   chmod 755 ${pkgdir}/opt/arch/bin/gtester-report || return 1
+
+  rm $pkgdir/opt/arch/lib/charset.alias
+
 }
