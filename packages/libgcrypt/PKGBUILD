@@ -4,7 +4,7 @@
 
 pkgname=libgcrypt
 pkgver=1.4.5
-pkgrel=1
+pkgrel=2
 pkgdesc="a general purpose crypto library based on the code used"
 arch=('macx86')
 url="http://www.gnupg.org"
@@ -26,4 +26,6 @@ build() {
 #  install -d -m755 "${pkgdir}"/lib/ || return 1
 #  mv "${pkgdir}"/usr/lib/libgcrypt.so* "${pkgdir}"/lib/ || return 1
 #  ln -sf /lib/libgcrypt.so "${pkgdir}"/usr/lib/libgcrypt.so || return 1
+
+  rm -f ${pkgdir}/opt/arch/share/info/dir
 }
