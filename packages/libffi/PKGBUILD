@@ -4,7 +4,7 @@
 
 pkgname=libffi
 pkgver=3.0.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A portable, high level programming interface to various calling conventions."
 arch=('macx86')
 license=('MIT')
@@ -22,4 +22,6 @@ build() {
   make DESTDIR="${pkgdir}" install || return 1
   install -m755 -d "${pkgdir}/opt/arch/share/licenses/${pkgname}"
   install -m644 LICENSE "${pkgdir}/opt/arch/share/licenses/${pkgname}/" || return 1
+
+  rm -f ${pkgdir}/opt/arch/share/info/dir
 }
